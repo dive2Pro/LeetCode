@@ -22,9 +22,17 @@
 // Related Topics Array Tree Depth-first Search
 
 
+import java.util.HashMap;
+
 public class ConstructBinaryTreeFromInorderAndPostorderTraversal {
     public static void main(String[] args) {
         Solution solution = new ConstructBinaryTreeFromInorderAndPostorderTraversal().new Solution();
+        TreeNode node = solution.buildTree(
+                new int[]{4, 9, 3, 15, 20, 7},
+                new int[]{4, 9, 15, 7, 20, 3}
+        );
+
+        System.out.println(node);
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -51,22 +59,35 @@ public class ConstructBinaryTreeFromInorderAndPostorderTraversal {
 
     class Solution {
         public TreeNode buildTree(int[] inorder, int[] postorder) {
-            if(inorder.length == 0 || postorder.length == 0 ) {
+            HashMap<Integer, Integer> inMap = new HashMap<>();
+            for (int i = 0; i < postorder.length; i++) {
+                inMap.put(inorder[i], i);
+            }
+            return buildTree(postorder, 0, postorder.length - 1, inMap, 0, postorder.length - 1);
+        }
+
+
+        private TreeNode buildTree(int[] postorder, int inorderLeft, int inorderRight, HashMap<Integer, Integer> inorderMap, int inLeft, int inRight) {
+            if (inLeft > inRight) {
                 return null;
             }
-            int rootVal = inorder[0];
-            int postOrderFence = 0;
-            for(int i = 0 ; i < postorder.length ;i ++) {
-                if(postorder[i] == rootVal) {
-                    postOrderFence = i;
-                }
+
+            int rootVal = postorder[inRight];
+
+            int inorderIdx = inorderMap.get(rootVal);
+            int leftSize = inorderIdx - inorderLeft;
+            int rightSize = inorderRight - inorderIdx;
+
+
+            if (inLeft == inRight) {
+                return new TreeNode(rootVal);
             }
 
-//            int[] leftPost
-
             TreeNode root = new TreeNode(rootVal);
-
-
+            root.left = leftSize == 0 ? null : buildTree(postorder,
+                    inorderLeft, inorderIdx - 1, inorderMap, inLeft, inLeft + leftSize - 1);
+            root.right = rightSize == 0 ? null : buildTree(postorder,
+                    inorderIdx + 1, inorderRight, inorderMap, inLeft + leftSize, rightSize + inLeft + leftSize - 1);
 
             return root;
         }
