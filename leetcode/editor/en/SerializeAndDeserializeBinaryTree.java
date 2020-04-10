@@ -77,7 +77,32 @@ class TreeNode {
     TreeNode(int x) {
         val = x;
     }
+
+    static TreeNode generateFrom(Object[] nums) {
+        Queue<TreeNode> queue = new LinkedList<>();
+        TreeNode t = new TreeNode((Integer) nums[0]);
+        queue.add(t);
+
+        for (int i = 1; i < nums.length ; ) {
+            TreeNode node = queue.remove();
+
+            if (null != nums[i]) {
+                node.left = new TreeNode((Integer) nums[i]);
+                queue.add(node.left);
+            }
+            i++;
+            if ( i < nums.length && null != nums[i]) {
+                node.right = new TreeNode((Integer) nums[i]);
+                queue.add(node.right);
+            }
+
+            i++;
+
+        }
+        return t;
+    }
 }
+
 
 public class SerializeAndDeserializeBinaryTree {
     public static void main(String[] args) {
@@ -157,23 +182,23 @@ public class SerializeAndDeserializeBinaryTree {
                     queue.add(root);
                     target = 2;
                 } else {
-                    if(count == 0) {
+                    if (count == 0) {
                         count = target;
                         target = 0;
                     }
                     if (count > 0) {
                         TreeNode t = getFrom(s);
-                        if (Math.floorMod(count, 2)== 0) {
+                        if (Math.floorMod(count, 2) == 0) {
                             current = queue.remove();
                             current.left = t;
                         } else {
                             current.right = t;
                         }
-                        if(t != null) {
+                        if (t != null) {
                             target += 2;
                             queue.add(t);
                         }
-                        count --;
+                        count--;
                     }
                 }
             }

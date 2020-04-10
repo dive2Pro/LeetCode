@@ -58,7 +58,49 @@ public class FindModeInBinarySearchTree {
      * }
      */
     class Solution {
-        public int[] findMode(TreeNode root) {
+        Integer prev = null;
+        int count = 0;
+        int max = 1;
+
+        public int[] findMode(TreeNode node) {
+            List<Integer> list = new ArrayList<>();
+            dfs(node, list);
+            int[] ints = new int[list.size()];
+            for (int i = 0; i < ints.length; i++) {
+                ints[i] = list.get(i);
+            }
+
+            return ints;
+        }
+
+        public void dfs(TreeNode node, List<Integer> list) {
+            if (node == null) {
+                return;
+            }
+
+            dfs(node.left, list);
+
+            if (prev != null) {
+                if (prev == node.val) {
+                    count++;
+                } else {
+                    count = 1;
+                }
+            }
+
+
+            if (max < count) {
+                max = count;
+                list.clear();
+                list.add(node.val);
+            } else if (max == count) {
+                list.add(node.val);
+            }
+            prev = node.val;
+            dfs(node.right, list);
+        }
+
+        public int[] findMode2(TreeNode root) {
             if (root == null) {
                 return new int[]{};
             }
