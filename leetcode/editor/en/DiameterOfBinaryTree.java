@@ -75,7 +75,7 @@ public class DiameterOfBinaryTree {
             return Math.max(left, right) + 1;
         }
     }
-//leetcode submit region end(Prohibit modification and deletion)
+// leetcode submit region end(Prohibit modification and deletion)
 
 
 }

@@ -70,6 +70,12 @@ public class MinimumAbsoluteDifferenceInBst {
             return result;
         }
 
+        /**
+         * 这个只适用于一个节点一个节点添加的BST
+         *
+         * @param node
+         * @return
+         */
         private int dfs(TreeNode node) {
             if (node == null) {
                 return minumum;
