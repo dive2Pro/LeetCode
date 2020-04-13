@@ -70,37 +70,26 @@ public class LongestUnivaluePath {
      */
     class Solution {
         private int longest = 0;
-        private TreeNode prev;
 
         public int longestUnivaluePath(TreeNode root) {
-            Deque<TreeNode> queue = new LinkedList<>();
-
-            queue.add(root);
-            while (!queue.isEmpty()) {
-                TreeNode node = queue.pop();
-                prev = node;
-                dfs(node, queue);
-            }
+            dfs(root);
             return longest;
         }
 
-        private int dfs(TreeNode root, Deque<TreeNode> queue) {
+        private int dfs(TreeNode root) {
             if (root == null) {
                 return 0;
             }
 
-            if (prev.val != root.val) {
-                queue.add(root);
-                return 0;
-            }
+            int left = dfs(root.left);
+            int right = dfs(root.right);
 
-
-            int left = dfs(root.left, queue);
-            int right = dfs(root.right, queue);
+            left = root.left != null && root.left.val == root.val ? left + 1 : 0;
+            right = root.right != null && root.right.val == root.val ? right + 1 : 0;
 
             longest = Math.max(longest, left + right);
 
-            return Math.max(left, right) + 1;
+            return Math.max(left, right);
 
         }
     }
