@@ -54,6 +54,33 @@ public class BinaryTreeZigzagLevelOrderTraversal {
     class Solution {
         public List<List<Integer>> zigzagLevelOrder(TreeNode root) {
             List<List<Integer>> list = new ArrayList<>();
+
+            traversal(list, root, 0);
+
+            return list;
+        }
+
+        private void traversal(List<List<Integer>> list, TreeNode root, int level) {
+            if (root == null) {
+                return;
+            }
+            if (list.size() <= level) {
+                list.add(new ArrayList<>());
+            }
+
+            if (level % 2 == 0) {
+                list.get(level).add(root.val);
+            } else {
+                list.get(level).add(0, root.val);
+            }
+
+            traversal(list, root.left, level + 1);
+            traversal(list, root.right, level + 1);
+
+        }
+
+        public List<List<Integer>> zigzagLevelOrder2(TreeNode root) {
+            List<List<Integer>> list = new ArrayList<>();
             Deque<TreeNode> deque = new LinkedList<>();
             deque.add(root);
             int order = 1;
@@ -79,7 +106,6 @@ public class BinaryTreeZigzagLevelOrderTraversal {
                 if (numbers.size() > 0)
                     list.add(numbers);
             }
-
             return list;
         }
     }
