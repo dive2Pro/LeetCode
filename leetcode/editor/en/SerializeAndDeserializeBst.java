@@ -27,7 +27,7 @@ public class SerializeAndDeserializeBst {
                 3, 2, 6, null, null, 4, null, null, 5
         }));
 
-        TreeNode node = codec.deserialize(s);
+        TreeNode node = codec.deserialize("");
         System.out.println(node);
 
     }
@@ -73,19 +73,15 @@ public class SerializeAndDeserializeBst {
 
         // Decodes your encoded data to tree.
         public TreeNode deserialize(String data) {
-            return dfs(data, new int[]{0}, Integer.MAX_VALUE);
+            if(data.equals("")) return null;
+            return dfs(data.split(","), new int[]{0}, Integer.MAX_VALUE);
         }
 
-        private TreeNode dfs(String ss, int[] i, int max) {
-            if (ss.length() == i[0]) return null;
-            int index = i[0];
-            while (index < ss.length() && ss.charAt(index) != ',') {
-                index++;
-            }
-
-            int val = Integer.parseInt(ss.substring(i[0], index));
+        private TreeNode dfs(String[] ss, int[] i, int max) {
+            if (ss.length == i[0]) return null;
+            int val = Integer.parseInt(ss[i[0]]);
             if (val > max) return null;
-            i[0] = index + 1;
+            i[0]++;
             TreeNode res = new TreeNode(val);
             res.left = dfs(ss, i, val);
             res.right = dfs(ss, i, max);
