@@ -65,54 +65,31 @@ public class SerializeAndDeserializeBst {
                 return;
             }
 
-            sb.append(root.val + ",");
+            sb.append(root.val);
+            sb.append(",");
             preOrderDfs(root.left, sb);
             preOrderDfs(root.right, sb);
         }
 
         // Decodes your encoded data to tree.
         public TreeNode deserialize(String data) {
-            String[] strings = data.split(",");
-            TreeNode root = null;
-            if (data.equals("")) {
-                return null;
-            }
-            for (int i = 0; i < strings.length; i++) {
-//                if (strings[i].length() > 0) {
-                root = buildTreeInPreOrder(root, Integer.parseInt(strings[i]));
-//                }
-            }
-//            int[] index = new int[]{0};
-//            root = buildTreeInPreOrder(root, strings, index);
-            return root;
+            return dfs(data, new int[]{0}, Integer.MAX_VALUE);
         }
 
-        private TreeNode buildTreeInPreOrder(TreeNode root, int val) {
-            if (root == null) {
-                return new TreeNode(val);
+        private TreeNode dfs(String ss, int[] i, int max) {
+            if (ss.length() == i[0]) return null;
+            int index = i[0];
+            while (index < ss.length() && ss.charAt(index) != ',') {
+                index++;
             }
-            if (val < root.val) {
-                root.left = buildTreeInPreOrder(root.left, val);
-            } else {
-                root.right = buildTreeInPreOrder(root.right, val);
-            }
-            return root;
-        }
 
-        private TreeNode buildTreeInPreOrder(TreeNode root, String[] strings, int[] i) {
-            String s = strings[i[0]];
-            i[0]++;
-            if (s.equals("X")) {
-                return null;
-            }
-            int val = Integer.parseInt(s);
-
-            if (root == null) {
-                root = new TreeNode(val);
-            }
-            root.left = buildTreeInPreOrder(root.left, strings, i);
-            root.right = buildTreeInPreOrder(root.right, strings, i);
-            return root;
+            int val = Integer.parseInt(ss.substring(i[0], index));
+            if (val > max) return null;
+            i[0] = index + 1;
+            TreeNode res = new TreeNode(val);
+            res.left = dfs(ss, i, val);
+            res.right = dfs(ss, i, max);
+            return res;
         }
     }
 
