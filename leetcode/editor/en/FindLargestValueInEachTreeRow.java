@@ -24,7 +24,7 @@ public class FindLargestValueInEachTreeRow {
     public static void main(String[] args) {
         Solution solution = new FindLargestValueInEachTreeRow().new Solution();
         solution.largestValues(TreeNode.generateFrom(new Object[]{
-                1,3,2,5,3,null,9
+                1, 3, 2, 5, 3, null, 9
         }));
     }
 
@@ -42,10 +42,20 @@ public class FindLargestValueInEachTreeRow {
     class Solution {
         public List<Integer> largestValues(TreeNode root) {
             List<Integer> list = new ArrayList<>();
-            HashMap<Integer, Integer> map = new HashMap<>();
-            dfs(root, map, 0);
-            list.addAll(map.values());
+            dfs(root, list, 0);
             return list;
+        }
+
+        private void dfs(TreeNode root, List<Integer> list, int level) {
+            if (root == null) return ;
+            if (list.size() <= level) {
+                list.add(root.val);
+            } else {
+                list.set(level, Math.max(root.val, list.get(level)));
+            }
+
+            dfs(root.left, list, level + 1);
+            dfs(root.right, list, level + 1);
         }
 
         private void dfs(TreeNode root, HashMap<Integer, Integer> map, int level) {
