@@ -23,7 +23,9 @@ import java.util.LinkedList;
 public class SerializeAndDeserializeBst {
     public static void main(String[] args) {
         Codec codec = new SerializeAndDeserializeBst().new Codec();
-        String s = codec.serialize(TreeNode.generateFrom(new Object[]{1, 2, 3, null, 4, 5, 6, null, null, 6}));
+        String s = codec.serialize(TreeNode.generateFrom(new Object[]{
+                3, 2, 6, null, null, 4, null, null, 5
+        }));
 
         TreeNode node = codec.deserialize(s);
         System.out.println(node);
@@ -55,15 +57,15 @@ public class SerializeAndDeserializeBst {
 
         private void preOrderDfs(TreeNode root, StringBuilder sb) {
             if (sb.length() > 0) {
-                sb.append(",");
+//                sb.append(",");
             }
 
             if (root == null) {
-                sb.append("X");
+//                sb.append("X");
                 return;
             }
 
-            sb.append(root.val);
+            sb.append(root.val + ",");
             preOrderDfs(root.left, sb);
             preOrderDfs(root.right, sb);
         }
@@ -75,8 +77,25 @@ public class SerializeAndDeserializeBst {
             if (data.equals("")) {
                 return null;
             }
-            int[] index = new int[]{0};
-            root = buildTreeInPreOrder(root, strings, index);
+            for (int i = 0; i < strings.length; i++) {
+//                if (strings[i].length() > 0) {
+                root = buildTreeInPreOrder(root, Integer.parseInt(strings[i]));
+//                }
+            }
+//            int[] index = new int[]{0};
+//            root = buildTreeInPreOrder(root, strings, index);
+            return root;
+        }
+
+        private TreeNode buildTreeInPreOrder(TreeNode root, int val) {
+            if (root == null) {
+                return new TreeNode(val);
+            }
+            if (val < root.val) {
+                root.left = buildTreeInPreOrder(root.left, val);
+            } else {
+                root.right = buildTreeInPreOrder(root.right, val);
+            }
             return root;
         }
 
