@@ -18,14 +18,14 @@ package leetcode.editor.en;
 // Related Topics Tree Depth-first Search Breadth-first Search
 
 
-import java.util.ArrayList;
-import java.util.Deque;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 public class FindLargestValueInEachTreeRow {
     public static void main(String[] args) {
         Solution solution = new FindLargestValueInEachTreeRow().new Solution();
+        solution.largestValues(TreeNode.generateFrom(new Object[]{
+                1,3,2,5,3,null,9
+        }));
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -42,28 +42,23 @@ public class FindLargestValueInEachTreeRow {
     class Solution {
         public List<Integer> largestValues(TreeNode root) {
             List<Integer> list = new ArrayList<>();
-            if (root == null) return list;
-            Deque<TreeNode> deque = new LinkedList<>();
-            deque.add(root);
-            while (!deque.isEmpty()) {
-                int size = deque.size();
-                int largest = Integer.MIN_VALUE;
-                while (size-- > 0) {
-                    TreeNode node = deque.pop();
-                    if (node.val > largest) {
-                        largest = node.val;
-                    }
-
-                    if (node.left != null)
-                        deque.add(node.left);
-                    if (node.right != null)
-                        deque.add(node.right);
-                }
-                list.add(largest);
-            }
-
+            HashMap<Integer, Integer> map = new HashMap<>();
+            dfs(root, map, 0);
+            list.addAll(map.values());
             return list;
         }
+
+        private void dfs(TreeNode root, HashMap<Integer, Integer> map, int level) {
+            if (root == null) return;
+            if (map.get(level) == null) {
+                map.put(level, root.val);
+            } else if (map.get(level) < root.val) {
+                map.put(level, root.val);
+            }
+            dfs(root.left, map, level + 1);
+            dfs(root.right, map, level + 1);
+        }
+
     }
 //leetcode submit region end(Prohibit modification and deletion)
 
