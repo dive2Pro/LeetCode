@@ -46,6 +46,11 @@ public class FindDuplicateSubtrees {
                 1, 2, 3, 4, null, 2, 4, null, null, 4
 //                0, 0, 0, 0, null, null, 0, null, null, null, 0
         }));
+
+        solution.findDuplicateSubtrees(TreeNode.generateFrom(new Object[]{
+//                1, 2, 3, 4, null, 2, 4, null, null, 4
+                0, 0, 0, 0, null, null, 0, null, null, null, 0
+        }));
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -76,19 +81,19 @@ public class FindDuplicateSubtrees {
                 return "X";
             }
             String left = dfs(root.left, total, stringBuilder, map);
+            int offset = stringBuilder.length();
             stringBuilder.append(left);
-            stringBuilder.insert(0, root.val);
-            String right = dfs(root.right, total, new StringBuilder(), map);
+            stringBuilder.insert(offset, root.val);
+            String leftAndMid = stringBuilder.toString();
+            stringBuilder.setLength(0);
+            String right = dfs(root.right, total, stringBuilder, map);
+            stringBuilder.append(leftAndMid);
             stringBuilder.append(right);
-
             String result = stringBuilder.toString();
-
-            if (!result.equals("")) {
-                int val = map.getOrDefault(result, 0) + 1;
-                map.put(result, val);
-                if (val == 2) {
-                    total.add(0, root);
-                }
+            int val = map.getOrDefault(result, 0) + 1;
+            map.put(result, val);
+            if (val == 2) {
+                total.add(0, root);
             }
             stringBuilder.setLength(0);
             return result;
