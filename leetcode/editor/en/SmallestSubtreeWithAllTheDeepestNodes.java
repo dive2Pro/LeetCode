@@ -43,14 +43,16 @@
 
 package leetcode.editor.en;
 
+import java.util.AbstractMap;
+
 public class SmallestSubtreeWithAllTheDeepestNodes {
     public static void main(String[] args) {
         Solution solution = new SmallestSubtreeWithAllTheDeepestNodes().new Solution();
 
         TreeNode node =
                 solution.subtreeWithAllDeepest(TreeNode.generateFrom(new Object[]{
-                3, 5, 1, 6, 2, 0, 8, null, null, 7, 4
-        }));
+                        3, 5, 1, 6, 2, 0, 8, null, null, 7, 4
+                }));
         System.out.println(node);
     }
 
@@ -66,38 +68,36 @@ public class SmallestSubtreeWithAllTheDeepestNodes {
      * }
      */
     class Solution {
+        class Pair {
+            Integer key;
+            TreeNode node;
+
+            public Pair(Integer key, TreeNode node) {
+                this.key = key;
+                this.node = node;
+            }
+        }
+
         public TreeNode subtreeWithAllDeepest(TreeNode root) {
 
-            int height = getHeight(root);
-            return dfs(root, 1, height);
+            Pair p = dfs(root);
+            return p.node;
         }
 
-        int getHeight(TreeNode node) {
-            if (node == null) return 0;
-            return Math.max(getHeight(node.left), getHeight(node.right)) + 1;
-        }
-
-
-        private TreeNode dfs(TreeNode node, int level, int height) {
+        Pair dfs(TreeNode node) {
             if (node == null) {
-                return null;
-            }
-            if (level == height) {
-                return node;
+                return new Pair(0, null);
             }
 
-            TreeNode left = dfs(node.left, level + 1, height);
-            TreeNode right = dfs(node.right, level + 1, height);
+            Pair left = dfs(node.left);
+            Pair right = dfs(node.right);
 
-            if (left == null && right == null) {
-                return null;
-            } else if (left != null && right != null) {
-                return node;
-            } else if (right != null) {
-                return right;
-            } else {
-                return left;
-            }
+            int leftKey = left.key;
+            int rightKey = right.key;
+            return new Pair(Math.max(leftKey, rightKey) + 1,
+                    leftKey == rightKey ? node : leftKey > rightKey ?
+                            left.node : right.node
+                    );
 
         }
     }
