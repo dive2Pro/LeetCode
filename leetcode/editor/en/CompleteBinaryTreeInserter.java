@@ -78,16 +78,12 @@ public class CompleteBinaryTreeInserter {
      */
     class CBTInserter {
         TreeNode root;
+        Deque<TreeNode> nextDeque;
 
         public CBTInserter(TreeNode root) {
             this.root = root;
-        }
 
-        public int insert(int v) {
-            return insertTo(root, v);
-        }
-
-        private int insertTo(TreeNode root, int v) {
+            nextDeque = new LinkedList<>();
             Deque<TreeNode> nodeDeque = new LinkedList<>();
             nodeDeque.add(root);
 
@@ -95,21 +91,40 @@ public class CompleteBinaryTreeInserter {
                 int size = nodeDeque.size();
                 for (int i = 0; i < size; i++) {
                     TreeNode node = nodeDeque.pop();
+                    if (node.left == null && node.right == null) {
+                        nextDeque.add(node);
+                        continue;
+                    }
                     if (node.left == null) {
-                        node.left = new TreeNode(v);
-                        return node.val;
+                        nextDeque.add(node);
+                    } else {
+                        nodeDeque.add(node.left);
                     }
 
                     if (node.right == null) {
-                        node.right = new TreeNode(v);
-                        return node.val;
+                        nextDeque.add(node);
+                    } else {
+                        nodeDeque.add(node.right);
                     }
-                    nodeDeque.add(node.left);
-                    nodeDeque.add(node.right);
                 }
             }
+        }
 
-            return root.val;
+        public int insert(int v) {
+            return insertTo(root, v);
+        }
+
+        private int insertTo(TreeNode root, int v) {
+            TreeNode node = nextDeque.getFirst();
+            TreeNode vNode = new TreeNode(v);
+            if (node.left == null) {
+                node.left = vNode;
+            } else if(node.right == null) {
+                node.right = vNode;
+                nextDeque.pop();
+            }
+            nextDeque.add(vNode);
+            return node.val;
         }
 
         public TreeNode get_root() {
