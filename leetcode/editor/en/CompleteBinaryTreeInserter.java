@@ -58,8 +58,10 @@ package leetcode.editor.en;
 // Related Topics Tree
 
 
+import java.util.ArrayList;
 import java.util.Deque;
 import java.util.LinkedList;
+import java.util.List;
 
 public class CompleteBinaryTreeInserter {
     public static void main(String[] args) {
@@ -77,58 +79,38 @@ public class CompleteBinaryTreeInserter {
      * }
      */
     class CBTInserter {
-        TreeNode root;
-        Deque<TreeNode> nextDeque;
+        List<TreeNode> list;
 
         public CBTInserter(TreeNode root) {
-            this.root = root;
 
-            nextDeque = new LinkedList<>();
-            Deque<TreeNode> nodeDeque = new LinkedList<>();
-            nodeDeque.add(root);
+            list = new ArrayList<>();
 
-            while (!nodeDeque.isEmpty()) {
-                int size = nodeDeque.size();
-                for (int i = 0; i < size; i++) {
-                    TreeNode node = nodeDeque.pop();
-                    if (node.left == null && node.right == null) {
-                        nextDeque.add(node);
-                        continue;
-                    }
-                    if (node.left == null) {
-                        nextDeque.add(node);
-                    } else {
-                        nodeDeque.add(node.left);
-                    }
+            list.add(root);
 
-                    if (node.right == null) {
-                        nextDeque.add(node);
-                    } else {
-                        nodeDeque.add(node.right);
-                    }
-                }
+            for (int i = 0; i < list.size(); i++) {
+                if (list.get(i).left != null) list.add(list.get(i).left);
+                if (list.get(i).right != null) list.add(list.get(i).right);
             }
         }
 
         public int insert(int v) {
-            return insertTo(root, v);
+
+            int N = list.size();
+
+            TreeNode node = new TreeNode(v);
+            list.add(node);
+
+            if (N % 2 == 1) {
+                list.get((N - 1) / 2).left = node;
+            } else {
+                list.get((N - 1) / 2).right = node;
+            }
+            return list.get((N - 1) / 2).val;
         }
 
-        private int insertTo(TreeNode root, int v) {
-            TreeNode node = nextDeque.getFirst();
-            TreeNode vNode = new TreeNode(v);
-            if (node.left == null) {
-                node.left = vNode;
-            } else if(node.right == null) {
-                node.right = vNode;
-                nextDeque.pop();
-            }
-            nextDeque.add(vNode);
-            return node.val;
-        }
 
         public TreeNode get_root() {
-            return root;
+            return list.get(0);
         }
     }
 
