@@ -63,17 +63,15 @@ package leetcode.editor.en;
 // Related Topics Tree Depth-first Search
 
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
 public class SmallestStringStartingFromLeaf {
     public static void main(String[] args) {
         Solution solution = new SmallestStringStartingFromLeaf().new Solution();
         solution.smallestFromLeaf(TreeNode.generateFrom(new Object[]{
 //                0, 1, 2, 3, 4, 3, 4
-                2, 2, 1, null, 1, 0, null, 0
+//                2, 2, 1, null, 1, 0, null, 0
+                25, 1, null, 0, 0, 1, null, null, null, 0
         }));
 
         solution.smallestFromLeaf(TreeNode.generateFrom(new Object[]{
@@ -94,62 +92,30 @@ public class SmallestStringStartingFromLeaf {
      * }
      */
     class Solution {
-        List<Integer> smallest;
+        String smallStr;
 
         public String smallestFromLeaf(TreeNode root) {
-            List<Integer> list = new ArrayList<>();
-            smallest = new ArrayList<>();
-            dfs(root, list);
-            StringBuilder sb = new StringBuilder();
-            for (int i = smallest.size() - 1; i >= 0; i--) {
-                char c = (char) (smallest.get(i) + 97);
-                sb.append(c);
-            }
-            return sb.toString();
+            smallStr = "";
+            dfs(root, new StringBuilder());
+            return smallStr;
         }
 
-        void copyTo(List<Integer> source, List<Integer> dest) {
-            dest.clear();
-            dest.addAll(source);
-        }
-
-        private void dfs(TreeNode root, List<Integer> list) {
+        private void dfs(TreeNode root, StringBuilder sb) {
             if (root == null) return;
-            int index = list.size();
-            list.add(root.val);
-            dfs(root.left, list);
-            dfs(root.right, list);
+            int index = sb.length();
+            sb.append((char)(root.val + 'a'));
+            dfs(root.left, sb);
+            dfs(root.right, sb);
             if (root.left == null && root.right == null) {
-                if (compare(list, smallest)) {
-                    copyTo(list, smallest);
+                String str = sb.reverse().toString();
+                sb.reverse();
+                if (smallStr.equals("")) {
+                    smallStr = str;
+                } else if (smallStr.compareTo(str) > 0) {
+                    smallStr = str;
                 }
             }
-            list.remove(index);
-        }
-
-        private boolean compare(List<Integer> list, List<Integer> smallest) {
-
-            if (smallest.size() < 1) {
-                return true;
-            }
-
-            int listSize = list.size() - 1;
-            int smallSize = smallest.size() - 1;
-            while (listSize > -1 && smallSize > -1) {
-                int l = list.get(listSize);
-                int r = smallest.get(smallSize);
-
-                listSize--;
-                smallSize--;
-
-                if (l < r) {
-                    return true;
-                } else if (l > r) {
-                    return false;
-                }
-            }
-
-            return listSize <= 0;
+            sb.setLength(index);
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
