@@ -38,10 +38,14 @@ package leetcode.editor.en;
 
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class MaximumDifferenceBetweenNodeAndAncestor {
     public static void main(String[] args) {
         Solution solution = new MaximumDifferenceBetweenNodeAndAncestor().new Solution();
+        solution.maxAncestorDiff(TreeNode.generateFrom(new Object[]{
+                8, 3, 10, 1, 6, null, 14, null, null, 4, 7, 13
+        }));
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -58,29 +62,33 @@ public class MaximumDifferenceBetweenNodeAndAncestor {
     class Solution {
         public int maxAncestorDiff(TreeNode root) {
             int[] max = new int[1];
-            dfs(root, new ArrayList<>(), max);
+            dfs(root, new int[]{-1, -1}, max);
             return max[0];
         }
 
-        private void dfs(TreeNode root, ArrayList<Integer> integers, int[] max) {
+        private void dfs(TreeNode root, int[] ints, int[] max) {
             if (root == null) return;
-            max[0] = findLargestDiffWith(integers, root.val, max[0]);
-            int index = integers.size();
-            integers.add(root.val);
-            dfs(root.left, integers, max);
-            dfs(root.right, integers, max);
-            integers.remove(index);
-        }
 
-        private int findLargestDiffWith(ArrayList<Integer> integers, int val, int max) {
-            for (Integer integer : integers) {
-                int v = Math.abs(integer - val);
-                if (v > max) {
-                    max = v;
+            int[] originMax = new int[]{ints[0], ints[1]};
+
+            if (ints[1] == -1) {
+                ints[1] = root.val;
+                ints[0] = root.val;
+            } else {
+                if (root.val > ints[1]) {
+                    ints[1] = root.val;
+                } else if (root.val < ints[0]) {
+                    ints[0] = root.val;
                 }
             }
+            int r = Math.abs(ints[0] - ints[1]);
+            max[0] = Math.max(r, max[0]);
+            dfs(root.left, ints, max);
+            dfs(root.right, ints, max);
 
-            return max;
+            // replace to origin Max;
+            ints[0] = originMax[0];
+            ints[1] = originMax[1];
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
