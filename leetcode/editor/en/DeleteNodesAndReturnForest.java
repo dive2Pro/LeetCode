@@ -30,7 +30,7 @@ package leetcode.editor.en;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
 
 public class DeleteNodesAndReturnForest {
@@ -38,7 +38,7 @@ public class DeleteNodesAndReturnForest {
         Solution solution = new DeleteNodesAndReturnForest().new Solution();
         solution.delNodes(TreeNode.generateFrom(new Object[]{
                 1, 2, 3, 4, 5, 6, 7
-        }), new int[]{ 3, 5});
+        }), new int[]{3, 5});
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -56,26 +56,23 @@ public class DeleteNodesAndReturnForest {
 
         public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
             List<TreeNode> nodes = new ArrayList<>();
-            List<Integer> ints = new ArrayList<>();
+            HashMap<Integer, Integer> map = new HashMap<>();
+            HashMap<Integer, TreeNode> nodesMap = new HashMap<>();
+            nodesMap.put(root.val, root);
             for (int value : to_delete) {
-                ints.add(value);
+                map.put(value, 1);
             }
-            nodes.add(root);
-            dfs(nodes, root, ints);
+            dfs(nodesMap, root, map);
+            nodes.addAll(nodesMap.values());
             return nodes;
         }
 
-        private TreeNode dfs(List<TreeNode> nodes, TreeNode root, List<Integer> to_delete) {
+        private TreeNode dfs(HashMap<Integer, TreeNode> nodes, TreeNode root, HashMap<Integer, Integer> to_delete) {
             if (root == null) return null;
-            if (ifSideAndDelete(to_delete, root.val)) {
-                for (int i = 0; i < nodes.size(); i++) {
-                    if (nodes.get(i).val == root.val) {
-                        nodes.remove(i);
-                        break;
-                    }
-                }
-                if (root.left != null) nodes.add(root.left);
-                if (root.right != null) nodes.add(root.right);
+            if (to_delete.containsKey(root.val)) {
+                nodes.remove(root.val);
+                if (root.left != null) nodes.put(root.left.val, root.left);
+                if (root.right != null) nodes.put(root.right.val, root.right);
                 dfs(nodes, root.left, to_delete);
                 dfs(nodes, root.right, to_delete);
                 root = null;
@@ -87,15 +84,6 @@ public class DeleteNodesAndReturnForest {
             return root;
         }
 
-        private boolean ifSideAndDelete(List<Integer> to_delete, int val) {
-            for (int i = 0; i < to_delete.size(); i++) {
-                if (to_delete.get(i) == val) {
-                    to_delete.remove(i);
-                    return true;
-                }
-            }
-            return false;
-        }
     }
 //leetcode submit region end(Prohibit modification and deletion)
 
