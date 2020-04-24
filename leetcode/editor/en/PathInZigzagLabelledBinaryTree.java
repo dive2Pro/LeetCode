@@ -43,11 +43,11 @@ import java.util.List;
 public class PathInZigzagLabelledBinaryTree {
     public static void main(String[] args) {
         Solution solution = new PathInZigzagLabelledBinaryTree().new Solution();
-//        List<Integer> path = solution.pathInZigZagTree(5);
-//        List<Integer> path = solution.pathInZigZagTree(16);
-        List<Integer> path = solution.pathInZigZagTree(26);
+        List<Integer> path = solution.pathInZigZagTree(5);
+        List<Integer> path2 = solution.pathInZigZagTree(16);
+        List<Integer> path3 = solution.pathInZigZagTree(26);
 //        path = solution.pathInZigZagTree(16);
-        System.out.println(path);
+        System.out.println("");
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -74,21 +74,12 @@ public class PathInZigzagLabelledBinaryTree {
         private int findParentIn(List<Integer> list, int[] minMax, int val, boolean isReverse) {
 
             if (isReverse) {
-                int i, left = minMax[0];
-                for (i = minMax[1]; i >= minMax[0]; i--, left++) {
-                    if (val == i) {
-                        return i % 2 != 1 ? (left - 1) / 2 : left / 2;
-                    }
-                }
+                int left = (minMax[0] - val + minMax[1]);
+                return left % 2 == 0 ? left / 2 : (left - 1) / 2;
             } else {
-                int i, right = minMax[1];
-                for (i = minMax[0]; i <= minMax[1]; i++, right--) {
-                    if (val == i) {
-                        return val % 2 != 1 ? (right - 1) / 2 : right / 2;
-                    }
-                }
+                int right = (minMax[1] - val + minMax[0]);
+                return right % 2 == 0 ? right / 2 : (right - 1) / 2;
             }
-            return -1;
         }
 
         private HashMap<Integer, int[]> generatorLimitBy(int level) {
