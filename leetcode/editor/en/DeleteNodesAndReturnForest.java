@@ -36,9 +36,13 @@ import java.util.List;
 public class DeleteNodesAndReturnForest {
     public static void main(String[] args) {
         Solution solution = new DeleteNodesAndReturnForest().new Solution();
+//        solution.delNodes(TreeNode.generateFrom(new Object[]{
+//                1, 2, 3, 4, 5, 6, 7
+//        }), new int[]{3, 5});
+
         solution.delNodes(TreeNode.generateFrom(new Object[]{
-                1, 2, 3, 4, 5, 6, 7
-        }), new int[]{3, 5});
+                1, 2, null, 4, 3
+        }), new int[]{2, 3});
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -57,31 +61,20 @@ public class DeleteNodesAndReturnForest {
         public List<TreeNode> delNodes(TreeNode root, int[] to_delete) {
             List<TreeNode> nodes = new ArrayList<>();
             HashMap<Integer, Integer> map = new HashMap<>();
-            HashMap<Integer, TreeNode> nodesMap = new HashMap<>();
-            nodesMap.put(root.val, root);
             for (int value : to_delete) {
                 map.put(value, 1);
             }
-            dfs(nodesMap, root, map);
-            nodes.addAll(nodesMap.values());
+            helper(nodes, root, true, map);
             return nodes;
         }
 
-        private TreeNode dfs(HashMap<Integer, TreeNode> nodes, TreeNode root, HashMap<Integer, Integer> to_delete) {
-            if (root == null) return null;
-            if (to_delete.containsKey(root.val)) {
-                nodes.remove(root.val);
-                if (root.left != null) nodes.put(root.left.val, root.left);
-                if (root.right != null) nodes.put(root.right.val, root.right);
-                dfs(nodes, root.left, to_delete);
-                dfs(nodes, root.right, to_delete);
-                root = null;
-            } else {
-                root.left = dfs(nodes, root.left, to_delete);
-                root.right = dfs(nodes, root.right, to_delete);
-            }
-
-            return root;
+        TreeNode helper(List<TreeNode> list, TreeNode node, boolean isRoot, HashMap<Integer, Integer> toDelete) {
+            if (node == null) return null;
+            boolean isDeleted = toDelete.containsKey(node.val);
+            if (isRoot && !isDeleted) list.add(node);
+            node.left = helper(list, node.left, isDeleted, toDelete);
+            node.right = helper(list, node.right, isDeleted, toDelete);
+            return isDeleted ? null : node;
         }
 
     }
