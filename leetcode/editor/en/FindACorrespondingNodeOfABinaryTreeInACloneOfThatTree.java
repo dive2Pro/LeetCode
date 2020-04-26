@@ -62,9 +62,16 @@ package leetcode.editor.en;
 // Related Topics Tree
 
 
+import java.util.ArrayList;
+
 public class FindACorrespondingNodeOfABinaryTreeInACloneOfThatTree {
     public static void main(String[] args) {
         Solution solution = new FindACorrespondingNodeOfABinaryTreeInACloneOfThatTree().new Solution();
+        solution.getTargetCopy(
+                TreeNode.generateFrom(new Object[]{7}),
+                TreeNode.generateFrom(new Object[]{7}),
+                TreeNode.generateFrom(new Object[]{7})
+        );
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -80,12 +87,18 @@ public class FindACorrespondingNodeOfABinaryTreeInACloneOfThatTree {
      */
 
     class Solution {
-        TreeNode node;
+        TreeNode node = null;
 
         public final TreeNode getTargetCopy(final TreeNode original, final TreeNode cloned, final TreeNode target) {
-            int targetVal = target.val;
-            dfs(original, cloned, targetVal);
-            return node;
+            return helper(cloned, target);
+        }
+
+        private TreeNode helper(TreeNode root, TreeNode target) {
+            if (root == null) return null;
+            if(root.val == target.val) return root;
+            TreeNode left = helper(root.left, target);
+            if(left != null) return left;
+            return helper(root.right, target);
         }
 
         private void dfs(TreeNode original, TreeNode cloned, int targetVal) {
