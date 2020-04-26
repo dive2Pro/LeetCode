@@ -22,6 +22,8 @@ package leetcode.editor.en;
 
 import javafx.util.Pair;
 
+import java.util.LinkedList;
+
 public class DeepestLeavesSum {
     public static void main(String[] args) {
         Solution solution = new DeepestLeavesSum().new Solution();
@@ -58,7 +60,38 @@ public class DeepestLeavesSum {
      */
     class Solution {
         public int deepestLeavesSum(TreeNode root) {
-            return dfs(root, 0).total;
+            Pair p = new Pair(0, 0);
+            helper(root, 0, p);
+            return bfs(root);
+        }
+
+        int bfs(TreeNode node) {
+            LinkedList<TreeNode> list = new LinkedList<>();
+            list.add(node);
+            int res = 0, i = 0;
+            while (!list.isEmpty()) {
+                int size = list.size();
+                for (i = 0, res = 0; i < size; i++) {
+                    TreeNode n = list.poll();
+                    res += n.val;
+                    if (n.right != null) list.add(n.right);
+                    if (n.left != null) list.add(n.left);
+                }
+            }
+            return res;
+        }
+
+        void helper(TreeNode node, int level, Pair sum) {
+            if (node == null) return;
+            if (node.left == null && node.right == null)
+                if (level > sum.key) {
+                    sum.key = level;
+                    sum.total = node.val;
+                } else if (level == sum.key) {
+                    sum.total += node.val;
+                }
+            helper(node.left, level + 1, sum);
+            helper(node.right, level + 1, sum);
         }
 
         private Pair dfs(TreeNode root, int level) {
@@ -72,7 +105,7 @@ public class DeepestLeavesSum {
             }
             if (left.key > right.key) {
                 return left;
-            } else if (left.key == right.key) {
+            } else if (left.key.equals(right.key)) {
                 return new Pair(left.key, left.total + right.total);
             }
             return right;
