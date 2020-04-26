@@ -86,13 +86,15 @@ package leetcode.editor.en;
 // Related Topics Hash Table Tree
 
 
+import java.util.HashMap;
+
 public class FindElementsInAContaminatedBinaryTree {
     public static void main(String[] args) {
 //        ["FindElements","find","find","find"]
 //[[[-1,-1,-1,null,null,-1,-1,null,null,null,-1]],[6],[1],[6]]
         FindElements findElements = new FindElementsInAContaminatedBinaryTree().new FindElements(TreeNode.generateFrom(new Object[]{
 //                -1, null, -1
-                -1,-1,-1,null,null,-1,-1,null,null,null,-1
+                -1, -1, -1, null, null, -1, -1, null, null, null, -1
         }));
         findElements.find(6);
     }
@@ -111,18 +113,18 @@ public class FindElementsInAContaminatedBinaryTree {
     class FindElements {
 
         TreeNode root;
-        int[] ints;
+
+        HashMap<Integer, Integer> map;
 
         public FindElements(TreeNode root) {
             this.root = root;
             root.val = 0;
-            ints = new int[(int) Math.pow(2, 20)];
+            map = new HashMap<>();
             recover(root, root.val);
         }
 
         private void recover(TreeNode root, int pv) {
-            if (root == null) return;
-            ints[root.val] = 1;
+            map.put(root.val, 1);
             if (root.left != null) {
                 root.left.val = 2 * pv + 1;
                 recover(root.left, root.left.val);
@@ -134,7 +136,7 @@ public class FindElementsInAContaminatedBinaryTree {
         }
 
         public boolean find(int target) {
-            return ints[target] == 1;
+            return map.containsKey(target);
         }
     }
 
