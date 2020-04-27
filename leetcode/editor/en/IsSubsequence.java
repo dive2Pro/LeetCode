@@ -52,12 +52,14 @@ public class IsSubsequence {
         public boolean isSubsequence(String s, String t) {
             int j = 0;
             int i = 0;
+            char[] sAry = s.toCharArray();
+            char[] tAry = t.toCharArray();
             boolean runOut = s.equals("");
-            for (; i < s.length(); i++) {
-                char c = s.charAt(i);
-                for (; j < t.length(); ) {
-                    if (c == t.charAt(j++)) {
-                        runOut = i == s.length() - 1;
+            for (; i < sAry.length; i++) {
+                char c = sAry[i];
+                while (j < tAry.length) {
+                    if (c == (tAry[j++])) {
+                        runOut = i == sAry.length - 1;
                         break;
                     }
                 }
