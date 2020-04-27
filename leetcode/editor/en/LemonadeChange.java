@@ -75,56 +75,52 @@ package leetcode.editor.en;
 // Related Topics Greedy
 
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Deque;
-import java.util.HashMap;
+import java.util.*;
 
 public class LemonadeChange {
     public static void main(String[] args) {
         Solution solution = new LemonadeChange().new Solution();
-        solution.lemonadeChange(new int[]{
-                5, 5, 10, 10, 20
+        boolean s = solution.lemonadeChange(new int[]{
+//                5, 5, 5, 10, 10, 20
+//                5,5,5,5,20,20,5,5,5,5
+                5, 5, 5, 10, 10, 20, 10, 20, 5, 5
         });
+        System.out.println(s);
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
+
+    /**
+     * 有一个大前提没有发现:
+     * <p>
+     * 20 是无法找回去的
+     * <p>
+     * 因为这道题目中纸币的最大面值就是 20
+     */
     class Solution {
-        int[] sizes = {20, 10, 5};
 
         public boolean lemonadeChange(int[] bills) {
-            HashMap<Integer, Integer> map = new HashMap<>();
-            for (int i = 0; i < bills.length; i++) {
-                if (bills[i] == 5) {
-                    map.put(5, map.getOrDefault(5, 0) + 1);
-                } else {
-                    if (!exchange(bills[i] - 5, map)) {
-                        return false;
-                    }
-                    map.put(bills[i], map.getOrDefault(bills[i], 0) + 1);
+            int five = 0;
+            int ten = 0;
+            for (Integer bill : bills) {
+                if (bill == 5) five++;
+                else if (bill == 10) {
+                    ten++;
+                    five--;
+                } else if (ten > 0) {
+                    ten--;
+                    five--;
+                } else five -= 3;
+
+                if (five < 0) {
+                    return false;
                 }
+
             }
 
             return true;
         }
 
-        private boolean exchange(int bill, HashMap<Integer, Integer> changes) {
-            for (Integer key : sizes) {
-                if (changes.getOrDefault(key, 0) > 0) {
-                    int i = changes.get(key);
-                    for (; i > 0; i--) {
-                        if (bill - key >= 0) {
-                            bill -= key;
-                        } else {
-                            break;
-                        }
-                    }
-                    changes.put(key, i);
-                }
-            }
-
-            return bill == 0;
-        }
     }
 
 //leetcode submit region end(Prohibit modification and deletion)
