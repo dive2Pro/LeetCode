@@ -50,7 +50,7 @@ public class TwoCityScheduling {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
 
-        public int twoCitySchedCost(int[][] costs) {
+        public int twoCitySchedCostSort(int[][] costs) {
             Arrays.sort(costs, (p, q) -> {
                 return (p[0] - p[1]) - (q[0] - q[1]);
             });
@@ -65,6 +65,33 @@ public class TwoCityScheduling {
             }
 
             return sum;
+        }
+
+        public int twoCitySchedCost(int[][] costs) {
+            return twoCitySchedCostDp(costs);
+        }
+
+        public int twoCitySchedCostDp(int[][] costs) {
+            int N = costs.length / 2;
+            int[][] dp = new int[N + 1][N + 1];
+
+            for (int i = 1; i <= N; i++) {
+
+                dp[i][0] = dp[i - 1][0] + costs[i - 1][0];
+
+                dp[0][i] = dp[0][i - 1] + costs[i - 1][1];
+            }
+
+            for (int i = 1; i <= N; i++) {
+                for (int j = 1; j <= N; j++) {
+                    dp[i][j] = Math.min(
+                            dp[i - 1][j] + costs[i + j - 1][0],
+                            dp[i][j - 1] + costs[i + j - 1][1]
+                    );
+                }
+            }
+
+            return dp[N][N];
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
