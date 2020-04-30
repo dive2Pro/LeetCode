@@ -41,19 +41,24 @@ import java.util.ArrayList;
 public class JumpGame {
     public static void main(String[] args) {
         Solution solution = new JumpGame().new Solution();
-        solution.canJump(new int[]{
-//                3, 2, 1, 1, 1,  4
-//                1
-                38, 2, 4, 4, 4, 9, 5, 2, 5, 8,
-                8, 0, 8, 6, 9, 1, 1, 6, 3, 5,
-                1, 2, 6, 6, 0, 4, 8, 6, 0, 3,
-                2, 8, 7, 6, 5, 1, 7, 0, 0, 4,
-                8, 3, 5, 9, 0, 4, 0, 1, 0, 5,
-                9, 2, 0, 7, 0, 2, 1, 0, 8, 2,
-                5, 1, 2, 3, 9, 7, 4, 7, 0, 0,
-                1, 8, 5, 6, 7, 5, 1, 9, 9, 3,
-                5, 0, 7, 5
+        long currentTimeMillis = System.nanoTime();
+        boolean can = solution.canJump(new int[]{
+                3, 2, 1, 2, 0, 4
+//                3, 2, 1, 0, 4
+//                2, 1, 1, 1, 0
+//                32, 2, 4, 4, 4, 9, 5, 2, 5, 8,
+//                8, 0, 8, 6, 9, 1, 1, 6, 3, 5,
+//                1, 2, 0, 1, 0, 4, 8, 6, 0, 3,
+//                2, 8, 7, 6, 5, 1, 7, 0, 0, 4,
+//                8, 3, 5, 9, 0, 4, 0, 1, 0, 5,
+//                9, 2, 0, 7, 0, 2, 1, 0, 8, 2,
+//                5, 1, 2, 3, 9, 7, 4, 7, 0, 0,
+//                1, 8, 5, 6, 7, 5, 1, 9, 9, 3,
+//                5, 0, 7, 5
         });
+        long currentTimeMillis2 = System.nanoTime();
+        System.out.println(can);
+        System.out.println(currentTimeMillis2 - currentTimeMillis);
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
@@ -63,16 +68,35 @@ public class JumpGame {
             list.add(0);
 
             while (!list.isEmpty()) {
-                int size = list.remove(list.size() - 1);
-                int range = nums[size];
+                int index = list.remove(list.size() - 1);
 
-                if (range + size >= nums.length - 1) {
+                int range = nums[index];
+
+                int willDecreased = index;
+
+                if (range + index >= nums.length - 1) {
                     return true;
                 }
 
-                for (int i = 1; i <= range; i++) {
-                    list.add(size + i);
+                // 此时检查 nums[range + index] 是否超过了 当前的 index
+                // 如果没有超过 检查 index 后一位
+                // 超过了 整个就可以继续
+                int backWard = 1;
+                while (nums[range + willDecreased] < backWard) {
+                    if (willDecreased <= 0) {
+                        range--;
+                    } else {
+                        willDecreased--;
+                    }
+                    backWard++;
+                    if (willDecreased <= 0 && range <= 0) {
+                        return false;
+                    }
                 }
+
+                list.add(willDecreased + range);
+
+
             }
 
             return false;
