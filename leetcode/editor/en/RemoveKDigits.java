@@ -40,6 +40,7 @@ package leetcode.editor.en;
 // Related Topics Stack Greedy
 
 
+import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.LinkedList;
 
@@ -54,87 +55,30 @@ public class RemoveKDigits {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
 
-        int findLeast(String high, int lo, int hi) {
-            if (lo >= hi) return -1;
-            char least = high.charAt(lo);
-            int minIndex = lo;
-            for (int i = lo + 1; i < hi; i++) {
-                if (least > high.charAt(i)) {
-                    least = high.charAt(i);
-                    minIndex = i;
-                }
-            }
-
-            return minIndex;
-        }
 
         public String removeKdigits(String num, int k) {
-
-            String low = num.substring(k);
-            Deque<Character> deque = new LinkedList<>();
-
-            int least = Integer.MAX_VALUE;
-            for (int i = 0; i < k; i++) {
-                deque.push(num.charAt(i));
-                if (least > num.charAt(i)) {
-                    least = num.charAt(i);
+            Deque<Character> deque = new ArrayDeque<>();
+            for (char c : num.toCharArray()) {
+                while (k > 0 && !deque.isEmpty() && deque.peekLast() > c) {
+                    deque.removeLast();
+                    k--;
                 }
+                deque.add(c);
             }
 
-            while (!deque.isEmpty()) {
-                if (deque.peek() == least) {
-                    break;
-                }
-                deque.poll();
+            while (k > 0) {
+                k--;
+                deque.removeLast();
             }
 
-            int lo = 0;
-            int hi = k;
-            int theLeast;
-            int j = 0;
-            int preLeast = 0;
+
             StringBuilder sb = new StringBuilder();
-            while ((theLeast = findLeast(num, lo, hi)) != -1) {
-                k = k - (theLeast - preLeast);
-                preLeast = theLeast;
-                if (theLeast == hi - 1) {
-                    // 找到 low 中等于或小于 low.charAt(lo) 的位置
-                    int biggest = j;
-                    int i = j + 1;
-                    StringBuilder lowSb = new StringBuilder();
-                    for (; i < low.length(); i++) {
-                        if (low.charAt(i) <= low.charAt(j)) {
-                            break;
-                        } else {
-                            if (low.charAt(biggest) < low.charAt(i)) {
-                                biggest = i;
-                            }
-                        }
-                    }
-                    lowSb.append(low);
-                    lowSb.deleteCharAt(biggest);
-                    lowSb.insert(0, num.charAt(theLeast));
-                    sb.append(lowSb);
-                    lo = theLeast + 1;
-                } else {
-                    if (low.charAt(j) > num.charAt(theLeast)) {
-                        sb.append(num.charAt(theLeast));
-                        lo = theLeast + 1;
-                        j++;
-                    } else if (low.charAt(j) == num.charAt(theLeast)) {
-//                        sb.append(num.charAt(theLeast));
-                        sb.append("D");
-                        j++;
-                    }
-                }
-            }
 
+            while (!deque.isEmpty() && deque.getFirst() == '0') deque.removeFirst();
 
-            if (sb.length() == 0) {
-                return "0";
-            }
+            while (!deque.isEmpty()) sb.append(deque.removeFirst());
 
-            return sb.toString();
+            return sb.length() == 0 ? "0" : sb.toString();
         }
     }
 //leetcode submit region end(Prohibit modification and deletion)
