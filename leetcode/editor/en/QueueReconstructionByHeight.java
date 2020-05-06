@@ -51,13 +51,11 @@ public class QueueReconstructionByHeight {
         public int[][] reconstructQueue(int[][] people) {
             TreeMap<Integer, PriorityQueue<Integer>> treeMap = new TreeMap<>();
 
-            for (int i = 0; i < people.length; i++) {
-                if (treeMap.get(people[i][0]) == null) {
-                    treeMap.put(people[i][0], new PriorityQueue<>());
+            for (int[] person : people) {
+                if (treeMap.get(person[0]) == null) {
+                    treeMap.put(person[0], new PriorityQueue<>());
                 }
-
-                treeMap.get(people[i][0])
-                        .add(people[i][1]);
+                treeMap.get(person[0]).add(person[1]);
             }
 
             ArrayList<int[]> arrayList = new ArrayList<>();
@@ -68,18 +66,7 @@ public class QueueReconstructionByHeight {
                 PriorityQueue<Integer> values = entry.getValue();
                 while (!values.isEmpty()) {
                     int position = values.poll();
-                    int n = 0;
-                    int j = 0;
-                    for (; j < arrayList.size(); j++) {
-                        if (n >= position) {
-                            break;
-                        }
-                        int[] cp = arrayList.get(j);
-                        if (cp[0] >= key) {
-                            n++;
-                        }
-                    }
-                    arrayList.add(j, new int[]{key, position});
+                    arrayList.add(position, new int[]{key, position});
                 }
             }
             int[][] sortedPeople = new int[people.length][2];
