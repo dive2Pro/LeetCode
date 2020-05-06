@@ -65,11 +65,8 @@ public class MaximizeSumOfArrayAfterKNegations {
         // K 表示选择多少个数( 这个数可以是相同位置 )进行 Negation
         public int largestSumAfterKNegations(int[] A, int K) {
             int sum = 0;
-
             Arrays.sort(A);
-
             boolean hasZero = false;
-            int negativeCount = 0;
             for (int i = 0; i < A.length; i++) {
                 if (A[i] < 0 && K > 0) {
                     K--;
@@ -77,7 +74,6 @@ public class MaximizeSumOfArrayAfterKNegations {
                     sum += A[i];
                     continue;
                 }
-                negativeCount = i - 1;
                 if (A[i] == 0) {
                     hasZero = true;
                 } else {

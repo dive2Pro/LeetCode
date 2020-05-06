@@ -44,14 +44,6 @@ package leetcode.editor.en;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NAryTreePostorderTraversal{
-      public static void main(String[] args) {
-           Solution solution = new NAryTreePostorderTraversal().new Solution();
-      }
-      
-      //leetcode submit region begin(Prohibit modification and deletion)
-/*
-// Definition for a Node.
 class Node {
     public int val;
     public List<Node> children;
@@ -67,6 +59,15 @@ class Node {
         children = _children;
     }
 };
+
+public class NAryTreePostorderTraversal{
+      public static void main(String[] args) {
+           Solution solution = new NAryTreePostorderTraversal().new Solution();
+      }
+      
+      //leetcode submit region begin(Prohibit modification and deletion)
+/*
+// Definition for a Node.
 */
 
 class Solution {

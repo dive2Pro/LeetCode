@@ -81,31 +81,73 @@ public class AllElementsInTwoBinarySearchTrees {
         public List<Integer> getAllElements(TreeNode root1, TreeNode root2) {
             Deque<Integer> list1 = new LinkedList<>();
             List<Integer> list = new ArrayList<>();
-            dfs(root1, list1);
-            insertIn(root2, list1, list);
-            list.addAll(list1);
+//            dfs(root1, list1);
+//            insertIn(root2, list1, list);
+//            list.addAll(list1);
+            helper(root1, root2, list);
             return list;
         }
 
-        private void dfs(TreeNode root, Deque<Integer> list) {
-            if (root == null) return;
-            dfs(root.left, list);
-            list.add(root.val);
-            dfs(root.right, list);
-        }
+    }
 
-        private void insertIn(TreeNode root, Deque<Integer> list, List<Integer> result) {
-            if (root == null) return;
-            insertIn(root.left, list, result);
-            while (list.peek() != null && list.peek() <= root.val) {
-                result.add(list.pop());
+    void ss(TreeNode root, List<Integer> list) {
+        if (root == null) return;
+        ss(root.left, list);
+        list.add(root.val);
+        ss(root.right, list);
+    }
+
+    void ss(TreeNode root, int val, List<Integer> list) {
+        if (root == null) return;
+        if (root.val > val) {
+            if (root.left == null) list.add(val);
+            else ss(root.left, val, list);
+
+            list.add(root.val);
+            ss(root.right, val, list);
+        } else if (root.val < val) {
+            ss(root.left, list);
+            list.add(root.val);
+            if (root.right == null) {
+                list.add(val);
+            } else {
+                ss(root.right, val, list);
             }
-            result.add(root.val);
-            insertIn(root.right, list, result);
+        } else {
+            ss(root.left, list);
+            list.add(root.val);
+            list.add(root.val);
+            ss(root.right, list);
         }
+    }
+
+    void helper(TreeNode val, int min, int max) {
 
     }
-//leetcode submit region end(Prohibit modification and deletion)
 
+    void helper(TreeNode node1, TreeNode node2, List<Integer> list) {
+        if(node1.val < node2.val) {
+            // 找到 node2 left 中小于或等于 node1.val 的节点
+
+        }
+    }
+
+    private void dfs(TreeNode root, Deque<Integer> list) {
+        if (root == null) return;
+        dfs(root.left, list);
+        list.add(root.val);
+        dfs(root.right, list);
+    }
+
+    private void insertIn(TreeNode root, Deque<Integer> list, List<Integer> result) {
+        if (root == null) return;
+        insertIn(root.left, list, result);
+        while (list.peek() != null && list.peek() <= root.val) {
+            result.add(list.pop());
+        }
+        result.add(root.val);
+        insertIn(root.right, list, result);
+    }
+//leetcode submit region end(Prohibit modification and deletion)
 
 }

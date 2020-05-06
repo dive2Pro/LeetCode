@@ -93,22 +93,15 @@ public class DistributeCoinsInBinaryTree {
         int count = 0;
 
         public int distributeCoins(TreeNode root) {
-            dfs(root, 0);
+            dfs(root);
             return count;
         }
 
-        private int dfs(TreeNode node, int level) {
+        private int dfs(TreeNode node) {
             if (node == null) return 0;
-            int nextLevel = level - 1;
-            int left = dfs(node.left, nextLevel);
-            int right = dfs(node.right, nextLevel);
-
-            int returned = 0;
-            if (node.val == 0) {
-                returned = -1;
-            } else if (node.val > 1) {
-                returned = node.val - 1;
-            }
+            int left = dfs(node.left);
+            int right = dfs(node.right);
+            int returned = node.val - 1;
             count += Math.abs(left) + Math.abs(right);
             returned = left + right + returned;
             return returned;

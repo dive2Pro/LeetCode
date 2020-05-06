@@ -79,6 +79,7 @@ class TreeNode {
     }
 
     static TreeNode generateFrom(Object[] nums) {
+        if(nums.length == 0) return null;
         Queue<TreeNode> queue = new LinkedList<>();
         TreeNode t = new TreeNode((Integer) nums[0]);
         queue.add(t);

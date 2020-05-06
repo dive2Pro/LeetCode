@@ -23,10 +23,7 @@ package leetcode.editor.en;
 // Related Topics Greedy
 
 
-import java.util.ArrayList;
-import java.util.Map;
-import java.util.PriorityQueue;
-import java.util.TreeMap;
+import java.util.*;
 
 public class QueueReconstructionByHeight {
     public static void main(String[] args) {
@@ -49,11 +46,11 @@ public class QueueReconstructionByHeight {
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
         public int[][] reconstructQueue(int[][] people) {
-            TreeMap<Integer, PriorityQueue<Integer>> treeMap = new TreeMap<>();
+            TreeMap<Integer, TreeSet<Integer>> treeMap = new TreeMap<>();
 
             for (int[] person : people) {
                 if (treeMap.get(person[0]) == null) {
-                    treeMap.put(person[0], new PriorityQueue<>());
+                    treeMap.put(person[0], new TreeSet<>());
                 }
                 treeMap.get(person[0]).add(person[1]);
             }
@@ -61,11 +58,10 @@ public class QueueReconstructionByHeight {
             ArrayList<int[]> arrayList = new ArrayList<>();
 
             while (!treeMap.isEmpty()) {
-                Map.Entry<Integer, PriorityQueue<Integer>> entry = treeMap.pollLastEntry();
+                Map.Entry<Integer, TreeSet<Integer>> entry = treeMap.pollLastEntry();
                 int key = entry.getKey();
-                PriorityQueue<Integer> values = entry.getValue();
-                while (!values.isEmpty()) {
-                    int position = values.poll();
+                TreeSet<Integer> values = entry.getValue();
+                for (int position : values) {
                     arrayList.add(position, new int[]{key, position});
                 }
             }
