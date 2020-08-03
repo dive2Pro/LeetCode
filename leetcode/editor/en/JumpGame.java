@@ -43,7 +43,10 @@ public class JumpGame {
         Solution solution = new JumpGame().new Solution();
         long currentTimeMillis = System.nanoTime();
         boolean can = solution.canJump(new int[]{
-                3, 2, 1, 2, 0, 4
+//                0, 1
+                2,0,0
+//                2,5,0,0
+//                3, 2, 1, 2, 0, 4
 //                3, 2, 1, 0, 4
 //                2, 1, 1, 1, 0
 //                32, 2, 4, 4, 4, 9, 5, 2, 5, 8,
@@ -63,6 +66,50 @@ public class JumpGame {
 
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        public boolean canJump(int[] nums) {
+            if(nums.length <= 0) {
+                return  false;
+            }
+
+            if(nums.length == 1) {
+                return true;
+            }
+
+            int curr = nums[0];
+
+            while(curr + 1 < nums.length) {
+
+                if(nums[curr] == 0) {
+                    int last = curr - 1;
+                    int limit = last;
+
+                    while(last > 0) {
+                        if(nums[last] == 0) {
+                            last = --limit;
+                        } else {
+                            last += nums[last];
+                            if(last > curr) {
+                                curr = last;
+                                break;
+                            }
+                        }
+                    }
+
+                    if(last <= 0) {
+                        return false;
+                    }
+                }
+                if(curr > nums.length) {
+                    break;
+                }
+                curr += nums[curr];
+            }
+
+            return true;
+        }
+    }
+
+    class Solution2 {
         public boolean canJump(int[] nums) {
             ArrayList<Integer> list = new ArrayList<>();
             list.add(0);

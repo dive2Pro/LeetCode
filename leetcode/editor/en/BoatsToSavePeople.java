@@ -1,3 +1,6 @@
+package  leetcode.editor.en;
+
+import java.util.Arrays;
 
 class Solution {
     public int numRescueBoats(int[] people, int limit) {
