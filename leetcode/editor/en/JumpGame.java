@@ -65,6 +65,7 @@ public class JumpGame {
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
+    // [[August 3, 2020]]
     class Solution {
         public boolean canJump(int[] nums) {
             if(nums.length <= 0) {

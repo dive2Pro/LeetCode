@@ -1,9 +1,9 @@
-//There are N gas stations along a circular route, where the amount of gas at st
-//ation i is gas[i]. 
+//There are N gas stations along a circular route, where the amount of gas at station
+// i is gas[i].
 //
-// You have a car with an unlimited gas tank and it costs cost[i] of gas to trav
-//el from station i to its next station (i+1). You begin the journey with an empty
-// tank at one of the gas stations. 
+// You have a car with an unlimited gas tank and it costs cost[i] of gas to travel
+// from station i to its next station (i+1).
+// You begin the journey with an empty tank at one of the gas stations.
 //
 // Return the starting gas station's index if you can travel around the circuit 
 //once in the clockwise direction, otherwise return -1. 
@@ -66,12 +66,79 @@ package leetcode.editor.en;
 public class GasStation{
     public static void main(String[] args) {
          Solution solution = new GasStation().new Solution();
-        boolean possible = solution.isPossible(new int[]{1,2,3,3,4,4,5,5});
+//        int possible = solution.isPossible(new int[]{1,2,3,4,5 }, new int[] { 3, 4, 5, 1, 2});
+//        int possible = solution.isPossible(new int[]{2, 3, 4}, new int[] {3, 4, 3});
+//        int possible = solution.isPossible(new int[]{2, 4}, new int[] {3, 4 });
+        int possible = solution.isPossible(new int[]{4}, new int[] {5 });
         System.out.println(possible);
     }
-    
+    // [[August 4, 2020]]
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        /**
+         *
+         * @param gas
+         * @return
+         */
+        public int canCompleteCircuit(int[] gas, int[] costs){
+            return isPossible(gas, costs);
+        }
+        public int isPossible(int[] gas, int[] costs) {
+            if(gas.length == 1) {
+                return gas[0] - costs[0] >= 0 ? 0 : -1;
+            }
+            // greedy
+            // 找到某个起点，这个起点出发，向右可以绕一圈回到起点
+            // 从 A 开始，如果到C处，不支持到D了
+            // 设置起点为 E，检查是否能到 A 处，
+                // 如果能到 A，检查剩余是否满足 C 和 D 的 gap
+                    // 如果满足
+                        // 则继续检查能否到 E
+                    // 如果不满足
+                        // 检查 E 的后一位 D
+            int gap = 0;
+            int start = 0;
+            int next = 0;
+            int total = 0;
+            int cost = 0;
+            int end = gas.length - 1;
+
+            while(next != start || next == 0) {
+                if(next > end) {
+                    return start;
+                }
+                total += gas[next];
+                cost = costs[next];
+                if(total - cost < 0) {
+                    // 往后设置 start
+                    gap = total - cost;
+                    start -= 1;
+                    while(gap < 0) {
+
+                        if(start == next) {
+                            return -1;
+                        }
+
+                        if (start <= 0) {
+                            start = end;
+                        }
+                        gap +=  gas[start] - costs[start];
+                        if(gap < 0) {
+                            start -= 1;
+                        }
+                    }
+                    total = gap;
+                } else {
+                    total -= cost;
+                }
+                next += 1;
+            }
+
+            return start;
+        }
+    }
+
+    class Solution2 {
         boolean can;
         boolean[] indicates;
         public boolean isPossible(int[] nums) {
