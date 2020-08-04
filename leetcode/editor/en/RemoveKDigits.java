@@ -47,14 +47,56 @@ import java.util.LinkedList;
 public class RemoveKDigits {
     public static void main(String[] args) {
         Solution solution = new RemoveKDigits().new Solution();
-//        solution.removeKdigits("112", 1);
+//        solution.removeKdigits("10", 2);
 //        solution.removeKdigits("43214321", 4);
-        solution.removeKdigits("99641436378815361156618888889974201828636847894114849949764848", 20);
+        String s = solution.removeKdigits("43210432", 3);
+//        solution.removeKdigits("99641436378815361156618888889974201828636847894114849949764848", 20);
+        System.out.println(s);
     }
-
+    // [[August 4, 2020]]
     //leetcode submit region begin(Prohibit modification and deletion)
     class Solution {
+        public String removeKdigits(String digit, int k) {
+            // 将 digit 代表的数字 移去 k 位，要求得到一个最小的数
+            // digit 和生成的 首位非 0
+            // 每次要删的都是最大的
+            // 删除时找到最小的
+            // 最小的前面的删完后
+            // 再找最小的后的最小的
+            // 删除这段区间的最大的
+            // -----
 
+            // 遍历数组，当前的 char 如果小于之前加入的则将之前加入的删除
+
+            Deque<Character> deque = new ArrayDeque<>();
+
+            for(char c: digit.toCharArray()) {
+                while(k > 0 && !deque.isEmpty() && deque.peekLast() > c) {
+                    k --;
+                    deque.removeLast();
+                }
+                deque.add(c);
+            }
+
+            while (k > 0) {
+                k --;
+                deque.removeLast();
+            }
+
+            while (!deque.isEmpty() && deque.peekFirst() == '0') {
+                deque.pop();
+            }
+
+            StringBuilder sb = new StringBuilder();
+            while (!deque.isEmpty()){
+                sb.append(deque.pop());
+            }
+
+
+            return sb.length() == 0 ? "0" : sb.toString();
+        }
+    }
+    class Solution2 {
 
         public String removeKdigits(String num, int k) {
             Deque<Character> deque = new ArrayDeque<>();
