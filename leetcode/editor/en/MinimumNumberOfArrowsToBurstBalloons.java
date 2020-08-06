@@ -3,8 +3,8 @@ package leetcode.editor.en;
 //There are a number of spherical balloons spread in two-dimensional space. For
 //each balloon, provided input is the start and end coordinates of the horizontal 
 //diameter. Since it's horizontal, y-coordinates don't matter and hence the
-// x-coordinates of start and end of the diameter suffice. Start is always smaller than e
-//nd. There will be at most 10^4 balloons.
+// x-coordinates of start and end of the diameter suffice. Start is always smaller than
+// end. There will be at most 10^4 balloons.
 //
 // An arrow can be shot up exactly vertically from different points along the x-
 //axis. A balloon with x-start and x-end bursts by an arrow shot at x if x-start ≤ x
@@ -35,13 +35,44 @@ import java.util.Arrays;
 public class MinimumNumberOfArrowsToBurstBalloons {
     public static void main(String[] args) {
         Solution solution = new MinimumNumberOfArrowsToBurstBalloons().new Solution();
-        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [2,8], [1,6], [7,12]]"));
-        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [0, 1], [2,8], [1,6], [7,12]]"));
-        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [0, 1], [0, 22], [2,8], [1,6], [7,12]]"));
+//        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [2,8], [1,6], [7,12]]"));
+//        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [0, 1], [2,8], [1,6], [7,12]]"));
+//        solution.findMinArrowShots(IntArrayGenerator.generator("[[10,16], [0, 1], [0, 22], [2,8], [1,6], [7,12]]"));
+        solution.findMinArrowShots(IntArrayGenerator.generator("[[9,12],[1,10],[4,11],[8,12],[3,9],[6,9],[6,7]]"));
     }
 
     //leetcode submit region begin(Prohibit modification and deletion)
+
     class Solution {
+        public int findMinArrowShots(int[][] balloons) {
+            // Greedy
+            // 每一箭都射破最多，需要分类，因为 start 永远 小于 end， 那么可以 end 为界限 只要前一个 的 end 小于 后一个的 start
+            // 前面的就属于一箭之内
+            // 所以就需要对 balloons 进行排列
+            if(balloons.length == 0) {
+                return 0;
+            }
+
+            Arrays.sort(balloons, (a, b) -> {
+               return a[1] - b[1] == 0 ? (a[0] - b[0]) : a[1] - b[1];
+            });
+            int end = balloons[0][1];
+
+            int k = 1 ;
+            for (int i = 1; i < balloons.length; i++) {
+                int c = balloons[i][0];
+                if(c > end) {
+                    k ++;
+                    end =  balloons[i][1];
+                }
+            }
+
+
+            return k;
+        }
+    }
+
+    class Solution2 {
         public int findMinArrowShots(int[][] points) {
             if (points.length == 0) return 0;
             Arrays.sort(points, (p, q) -> {
